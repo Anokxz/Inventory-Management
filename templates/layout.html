@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}My Website{% endblock %}</title>
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"> MAIN CSS LINK  -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navbar Section -->
+  <div class="navbar">
+    <a href="#" class="menu-bars" onclick="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </a>
+    <div class="nav-login">
+      <a href="/login">
+        <i class="fas fa-user-circle"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <nav id="sidebar" class="nav-menu">
+    <ul class="nav-menu-items">
+      <li class="navbar-toggle">
+        <a href="#" class="menu-bars" onclick="toggleSidebar()">
+          <i class="fas fa-times"></i>
+        </a>
+      </li>
+      <li class="nav-text"><a href="/home"><i class="fas fa-home"></i> <span>Home</span></a></li>
+      <li class="nav-text"><a href="/custom-design"><i class="fas fa-eye-slash"></i> <span>Customize Furniture Design</span></a></li>
+      <li class="nav-text"><a href="/available-products"><i class="fas fa-exclamation-circle"></i> <span>Available Products</span></a></li>
+      <li class="nav-text"><a href="/stock-view"><i class="fas fa-check-circle"></i> <span>Stock View</span></a></li>
+      <li class="nav-text"><a href="/report"><i class="fas fa-money-bill-alt"></i> <span>Payment Transaction</span></a></li>
+      <li class="nav-text"><a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content Section -->
+  <div class="content">
+    {% block content %}
+    <!-- Each page will replace this section -->
+    {% endblock %}
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+  </script>
+
+</body>
+</html>

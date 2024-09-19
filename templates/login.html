@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login/Register</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body id="body">
+
+  <div class='login-form-container'>
+    <div class='wrapper {{ 'active' if request.args.get('action') == 'register' else '' }}'>
+      
+      <!-- Login Form -->
+      <div class="form-box login">
+        <form action="{{ url_for('login') }}" method="POST">
+          <h1>Login</h1>
+          <div class="input-box">
+            <input type="text" name="username" placeholder="Username" required />
+            <i class="fas fa-user icon"></i>
+          </div>
+          <div class="input-box">
+            <input type="password" name="password" placeholder="Password" required />
+            <i class="fas fa-lock icon"></i>
+          </div>
+          <div class="remember-forgot">
+            <label><input type="checkbox" />Remember me</label>
+            <a href="#">Forgot password?</a>
+          </div>
+          <button class="button" type="submit">Login</button>
+          <div class="register-link">
+            <p>Don't have an account? 
+              <a href="{{ url_for('index', action='register') }}">Register</a>
+            </p>
+            <br>
+            <hr>
+            <br>
+            <button type="submit" class="g" formaction="{{ url_for('google_sign_in') }}">
+              <i class="fab fa-google g-logo"></i> Sign in with Google
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Register Form -->
+      <div class="form-box register">
+        <form action="{{ url_for('register') }}" method="POST">
+          <h1>Register</h1>
+          <div class="input-box">
+            <input type="text" name="username" placeholder="Username" required />
+            <i class="fas fa-user icon"></i>
+          </div>
+          <div class="input-box">
+            <input type="email" name="email" placeholder="Email" required />
+            <i class="fas fa-envelope icon"></i>
+          </div>
+          <div class="input-box">
+            <input type="password" name="password" placeholder="Password" required />
+            <i class="fas fa-lock icon"></i>
+          </div>
+          <div class="remember-forgot">
+            <label><input type="checkbox" />I agree to the terms & conditions</label>
+          </div>
+          <button class="button" type="submit">Register</button>
+          <div class="register-link">
+            <p>Already have an account? 
+              <a href="{{ url_for('index') }}">Login</a>
+            </p>
+            <br>
+            <hr>
+            <br>
+            <button type="submit" class="g" formaction="{{ url_for('google_sign_in') }}">
+              <i class="fab fa-google g-logo"></i> Continue with Google
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
