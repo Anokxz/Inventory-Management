@@ -6,13 +6,13 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
-@app.route("/import_raw_materials")
-def import_raw_materials():
-    return "TODO import_raw_materials"
+@app.route("/import_materials")
+def import_materials():
+    return render_template("import.html")
 
-@app.route("/customize_furniture_degsin")
-def customize_furniture_degsin():
-    return "TODO customize_furniture_degsin"
+@app.route("/customize_design")
+def customize_design():
+    return "TODO customize_design"
 
 @app.route("/available_products")
 def available_products():
@@ -33,28 +33,17 @@ def analysis():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+        username = request.form.get('username').strip()
+        password = request.form.get('password').strip()
 
-        return "todo login"
-        # return redirect(url_for('index'))
-    
+        
+        if username == "admin" and password == "admin":
+            # Add this to session storage
+            return redirect('/')
+        return "Display error in login page"
+        return  render_template("login.html", error=True)
     #GET METHOD
     return render_template("login.html")
-
-@app.route('/register', methods=['POST'])
-def register():
-    username = request.form.get('username')
-    email = request.form.get('email')
-    password = request.form.get('password')
-    # Handle registration logic (storing user info in DB)
-    # For now, just redirect to the same page
-    return "todo register"
-
-@app.route('/google-sign-in', methods=['POST'])
-def google_sign_in():
-    # Handle Google Sign-In logic
-    return "google sign-in"
 
 @app.route('/logout')
 def logout():
