@@ -6,9 +6,9 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
-@app.route("/import_materials")
-def import_materials():
-    return render_template("import.html")
+@app.route("/materials")
+def materials():
+    return render_template("materials.html")
 
 @app.route("/customize_design")
 def customize_design():
@@ -48,3 +48,6 @@ def login():
 @app.route('/logout')
 def logout():
     return redirect('/login')
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", debug=True)
