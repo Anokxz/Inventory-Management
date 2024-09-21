@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+<!-- Title -->
+{% block title %}Payment{% endblock %}
+{% block cssLink %}
+<link rel="stylesheet" href="{{ url_for('static', filename='payment.css') }}">
+{% endblock %}
+<!-- Body -->
+{% block content %}
+    <div class="transaction-container">
+        <h2>Transaction History</h2>
+        <table id="transactionTable">
+            <thead>
+                <tr>
+                    <th>Transaction Type</th>
+                    <th>Dealer/Customer</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price per Unit ($)</th>
+                    <th>Total Price ($)</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <a href="/transaction" class="submit-btn">Add New Transaction</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            const tableBody = document.querySelector('#transactionTable tbody');
+
+            transactions.forEach(transaction => {
+                const newRow = tableBody.insertRow();
+                newRow.classList.add(transaction.type === 'buy' ? 'buy' : 'sale'); 
+
+                newRow.innerHTML = `
+                    <td>${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</td>
+                    <td>${transaction.entity}</td>
+                    <td>${transaction.product}</td>
+                    <td>${transaction.quantity}</td>
+                    <td>${transaction.price.toFixed(2)}</td>
+                    <td>${transaction.totalPrice.toFixed(2)}</td>
+                `;
+            });
+        });
+    </script>
+{% endblock %}

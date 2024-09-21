@@ -94,7 +94,7 @@ span {
 .content {
   transition: margin-left 0.3s ease;
   margin-left: 0;
-  padding: 20px;
+  padding: 0;
 }
 
 

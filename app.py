@@ -6,6 +6,9 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+@app.route("/add")
+def add_product():
+    return render_template("add_product.html")
 @app.route("/materials")
 def materials():
     return render_template("materials.html")
@@ -16,15 +19,19 @@ def customize_design():
 
 @app.route("/available_products")
 def available_products():
-    return "TODO available_products"
+    return render_template("products.html")
 
 @app.route("/stock_view")
 def stock_view():
     return "TODO stock_view"
 
-@app.route("/payment_transaction")
-def payment_transaction():
-    return "TODO payment_transaction"
+@app.route("/payment")
+def payment():
+    return render_template("payment.html")
+
+@app.route("/transaction")
+def transaction():
+    return render_template("transaction.html")
 
 @app.route("/analysis")
 def analysis():

@@ -6,6 +6,7 @@
   <title>{% block title %}My Website{% endblock %}</title>
   <!-- <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"> MAIN CSS LINK  -->
   <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+  {% block cssLink %}{% endblock %}
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -35,7 +36,7 @@
       <li class="nav-text"><a href="/customize_design"><i class="fa-solid fa-pencil"></i><span>Customize Furniture Design</span></a></li>
       <li class="nav-text"><a href="/available_products"><i class="fa-brands fa-product-hunt"></i> <span>Available Products</span></a></li>
       <li class="nav-text"><a href="/stock_view"><i class="fa-solid fa-eye"></i> <span>Stock View</span></a></li>
-      <li class="nav-text"><a href="/payment_transaction"><i class="fas fa-money-bill-alt"></i> <span>Payment Transaction</span></a></li>
+      <li class="nav-text"><a href="/payment"><i class="fas fa-money-bill-alt"></i> <span>Payment Transaction</span></a></li>
       <li class="nav-text"><a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
     </ul>
   </nav>
