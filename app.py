@@ -1,14 +1,32 @@
-from flask import Flask,request, render_template,make_response,redirect, url_for
+from flask import Flask,request, render_template,make_response,redirect, url_for,flash, send_file
+import io
+import json
+import base64
+
+import os
+from dotenv import load_dotenv
+load_dotenv()
+DB_HOST = os.getenv('DB_HOST')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWD = os.getenv('DB_PASSWD')
+
+import mysql.connector
+connection = mysql.connector.connect(
+    host=DB_HOST, 
+    user=DB_USER,
+    password=DB_PASSWD, 
+    database="mini",
+    port="24967"
+)
 
 app = Flask(__name__)
+app.secret_key = "mini-inventory"
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/add")
-def add_product():
-    return render_template("add_product.html")
+
 @app.route("/materials")
 def materials():
     return render_template("materials.html")
@@ -17,9 +35,40 @@ def materials():
 def customize_design():
     return "TODO customize_design"
 
-@app.route("/available_products")
+@app.route("/products", methods=["GET", "POST"])
 def available_products():
-    return render_template("products.html")
+    if request.method == "POST":
+        pass
+ 
+    cursor = connection.cursor(dictionary=True)
+    
+    cursor.execute("select * from products;") 
+
+    products = cursor.fetchall()
+    for product in products:
+        # product["Img"] = send_file(io.BytesIO(product["Img"]), mimetype='image/jpeg')
+        product["Img"] = base64.b64encode(product["Img"]).decode('utf-8')
+    return render_template("products.html", products=products)
+
+@app.route("/product", methods=["GET", "POST"])
+def product():
+    if request.method == "POST":
+        new_product = request.form.to_dict()
+        image = request.files['image'].read()
+
+        
+        cursor = connection.cursor()
+        cursor.execute("Insert into products(name, category, psize, Price, InStockCount, Img, Descript) \
+                        values(%s ,%s ,%s ,%s ,%s ,%s ,%s)",\
+                (new_product["name"],new_product["category"],new_product["psize"],\
+                new_product["price"],new_product["in_stock_count"],image,new_product["description"]))
+        connection.commit()
+
+        return redirect("/products") 
+
+@app.route("/product/add")
+def add_product():
+    return render_template("add_product.html")
 
 @app.route("/stock_view")
 def stock_view():
@@ -47,7 +96,7 @@ def login():
         if username == "admin" and password == "admin":
             # Add this to session storage
             return redirect('/')
-        return "Display error in login page"
+        flash("Invalid Login", category='error')
         return  render_template("login.html", error=True)
     #GET METHOD
     return render_template("login.html")

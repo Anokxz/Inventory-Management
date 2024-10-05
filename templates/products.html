@@ -6,85 +6,36 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='product.css') }}">
 {% endblock %}
 
-{% block content %}
+{% block content%}
   <main>  
    <section class="products">  
     <h1>Furniture Products</h1>  
-    <div class="product-grid">  
-      <div class="product">  
-       <img src="{{ url_for('static', filename='imgs/product1.jpg') }}" alt="Product 1">  
-       <h2>Product 1</h2>  
-       <p>Product 1 description</p>  
-       <p>Price: $100</p>  
-       <button>Add to Cart</button>  
-      </div>  
-      <div class="product">  
-       <img src="{{ url_for('static', filename='imgs/product1.jpg') }}" alt="Product 2">  
-       <h2>Product 2</h2>  
-       <p>Product 2 description</p>  
-       <p>Price: $200</p>  
-       <button>Add to Cart</button>  
-      </div>  
-      <div class="product">  
-       <img src="{{ url_for('static', filename='imgs/product1.jpg') }}" alt="Product 3">  
-       <h2>Product 3</h2>  
-       <p>Product 3 description</p>  
-       <p>Price: $300</p>  
-       <button>Add to Cart</button>  
-      </div>  
-      <div class="product">  
-       <img src="{{ url_for('static', filename='imgs/product1.jpg') }}" alt="Product 4">  
-       <h2>Product 4</h2>  
-       <p>Product 4 description</p>  
-       <p>Price: $300</p>  
-       <button>Add to Cart</button>
-      </div>  
-      <div class="product">  
-       <img src="{{ url_for('static', filename='imgs/product1.jpg') }}" alt="Product 5">  
-       <h2>Product 5</h2>  
-       <p>Product 5 description</p>  
-       <p>Price: $300</p>  
-       <button>Add to Cart</button>  
-      </div>  
-      <div class="product">  
-       <img src="{{ url_for('static', filename='imgs/product1.jpg') }}" alt="Product 6">  
-       <h2>Product 6</h2>  
-       <p>Product 6 description</p>  
-       <p>Price: $300</p>  
-       <button>Add to Cart</button>  
-      </div>  
-      <div class="product">  
-       <img src="{{ url_for('static', filename='imgs/product1.jpg') }}" alt="Product 7">  
-       <h2>Product 7</h2>  
-       <p>Product 7 description</p>  
-       <p>Price: $300</p>  
-       <button>Add to Cart</button>  
-      </div>  
-      <div class="product">  
-       <img src="{{ url_for('static', filename='imgs/product1.jpg') }}" alt="Product 8">  
-       <h2>Product 8</h2>  
-       <p>Product 8 description</p>  
-       <p>Price: $300</p>  
-       <button>Add to Cart</button>  
-      </div>  
-      <div class="product">  
-        <img src="{{ url_for('static', filename='imgs/product1.jpg') }}" alt="Product 8">  
-        <h2>Product 9</h2>  
-        <p>Product 9 description</p>  
-        <p>Price: $700</p>  
-        <button>Add to Cart</button>  
-       </div>  
+    <div class="search-bar">  
+      <input type="text" id="search" placeholder="Search products...">  
+      <button id="filter">Search</button>
+      <a href="/product/add" id="filter" style="text-decoration: none;"><span type="button">Add Product</span></a>
+      <!-- <a href="/product/" id="filter" style="text-decoration: none;"><span type="button">Remove Product</span></a>  -->
     </div>  
+    <div class="product-grid">
+      {% for product in products %}
+      <div class="product">
+        <img src="data:image/jpeg;base64,{{ product['Img'] }}" alt="{{ product['name'] }}">
+        <h2>{{ product['name'] }}</h2>  
+        <p><strong>Price:</strong> <span>Rs{{ product['Price'] }}</span></p>  
+        <p><strong>Description:</strong> {{ product['Descript'] }}</p>  
+      </div>
+      {% endfor %}      
    </section>  
   </main>  
   <script>
-    const addToCartButtons = document.querySelectorAll('.product button');  
-  
-    addToCartButtons.forEach(button => {  
-      button.addEventListener('click', () => {  
-      // Add product to cart logic here  
-      console.log('Product added to cart!');  
-      });  
+    document.getElementById('search').addEventListener('input', function() {
+      const query = this.value.toLowerCase();
+      const products = document.querySelectorAll('.product');
+
+      products.forEach(product => {
+          const productName = product.querySelector('h2').innerText.toLowerCase();
+          product.style.display = productName.includes(query) ? 'block' : 'none';
+      });
     });
   </script>  
 {% endblock %}

@@ -19,35 +19,37 @@
                 </select>
             </div>
 
-            <div class="form-group" id="dealerField" style="display: none;">
+            <div class="form-group" id="dealerField" style="display: none;"  >
                 <label for="dealer">Dealer Name:</label>
-                <input type="text" id="dealer" name="dealer" placeholder="Enter dealer name">
+                <input type="text" id="dealer" name="dealer" placeholder="Enter dealer name"  >
             </div>
 
-            <div class="form-group" id="customerField" style="display: none;">
+            <div class="form-group" id="customerField" style="display: none;"  >
                 <label for="customer">Customer Name:</label>
-                <input type="text" id="customer" name="customer" placeholder="Enter customer name">
+                <input type="text" id="customer" name="customer" placeholder="Enter customer name"  >
             </div>
 
             <div class="form-group">
                 <label for="product">Product:</label>
-                <input type="text" id="product" name="product" placeholder="Enter product name" required>
+                <input type="text" id="product" name="product" placeholder="Enter product name"  required>
             </div>
 
             <div class="form-group">
                 <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
+                <input type="number" id="quantity" name="quantity" placeholder="Enter quantity"  required>
             </div>
 
             <div class="form-group">
                 <label for="price">Price per Unit ($):</label>
-                <input type="number" id="price" name="price" placeholder="Enter price per unit" step="0.01" required>
+                <input type="number" id="price" name="price" placeholder="Enter price per unit" step="0.01" width="100"  required>
             </div>
 
             <button type="submit" class="submit-btn">Submit Transaction</button>
+            
         </form>
+         <a href="/payment" class="view-btn">View Transactions</a>
 
-        <a href="/payment" class="view-btn">View Transactions</a>
+
     </div>
 
     <script>

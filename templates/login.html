@@ -8,11 +8,9 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body id="body">
-
   <div class='login-form-container'>
-    <div class='wrapper {{ 'active' if request.args.get('action') == 'register' else '' }}'>
-      
-      <!-- Login Form -->
+    <div class='wrapper'>
+       <!-- Login Form -->
       <div class="form-box login">
         <form action="{{ url_for('login') }}" method="POST">
           <h1>Login</h1>
@@ -25,14 +23,20 @@
             <i class="fas fa-lock icon"></i>
           </div>
           <button class="button" type="submit">Login</button>
-          </div>
         </form>
+      
+        <!-- Flashing Error messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% endwith %}
       </div>
-        </form>
-      </div>
-
     </div>
   </div>
-
 </body>
 </html>

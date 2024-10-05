@@ -1,10 +1,17 @@
+body{
+    background-color:white;
+}
 
 .transaction-container {
-    background-color: rgb(218, 61, 61);
+    background-color: rgb(207, 228, 248);
+    align-items: center;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    width: 97%;
+    width: 50%;
+    margin-left: 450px;
+    margin-top: 130px;
+    size: fixed;
     
 }
 
@@ -16,6 +23,11 @@ h2 {
 
 .form-group {
     margin-bottom: 15px;
+    width: 800px;
+}
+
+#transactionType{
+    width: 820px;
 }
 
 label {
@@ -47,7 +59,9 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .submit-btn, .view-btn {
-    width: 100%;
+    width: 150px;
+    margin-left: 350px;
+    display: grid;
     padding: 10px;
     background-color: #4CAF50;
     color: white;
@@ -59,6 +73,7 @@ input[type="number"]::-webkit-inner-spin-button {
     display: block;
     margin-top: 15px;
 }
+
 
 .submit-btn:hover, .view-btn:hover {
     background-color: #45a049;
@@ -72,7 +87,7 @@ a{
 
 
 .buy {
-    background-color: #ffcccc; 
+    background-color: #1fdbb3; 
 }
 
 .sale {
