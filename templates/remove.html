@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+<!-- Title -->
+{% block title %}Remove Material{% endblock %}
+
+{% block content %}
+    <div style="text-align: center;">
+        <h2>Remove Material</h2>
+
+        <form action="{{ url_for('remove_material') }}" method="POST" style="display: inline-block; text-align: left; width: 300px;">
+            <div class="form-group">
+                <label for="id">Material ID:</label>
+                <input type="number" id="id" name="id" min="1" required>
+            </div>
+            <button type="submit" class="button">Remove Material</button>
+        </form>
+    </div>
+
+    <style>
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            padding: 10px;
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+        }
+        .button {
+            background-color: red;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        .button:hover {
+            background-color: darkred;
+        }
+    </style>
+{% endblock %}
