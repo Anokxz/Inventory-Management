@@ -1,10 +1,22 @@
-from flask import Flask, request, render_template, make_response, redirect, url_for, flash, send_file
+from flask import Flask, request, render_template, make_response, redirect, url_for, flash, send_file, jsonify, session
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from datetime import timedelta
 import io
 import json
 import base64
 import os
 from dotenv import load_dotenv
 import mysql.connector
+from werkzeug.security import check_password_hash
+
+# Initialize Flask APP
+app = Flask(__name__)
+app.secret_key = "mini-inventory"
+
+# Initialize Flask-Login
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'  # Where to redirect if user is not logged in
+login_manager.login_message_category = 'warning'  # Flash message category for login required
 
 # Load environment variables
 load_dotenv()
@@ -21,13 +33,49 @@ connection = mysql.connector.connect(
     port=24967
 )
 
-app = Flask(__name__)
-app.secret_key = "mini-inventory"
+class User(UserMixin):
+    """Define a simple User model. Flask-Login requires this."""
+    def __init__(self, id, username, password):
+        self.id = id
+        self.username = username
+        self.password = password
+# Load user from the database by their ID
+@login_manager.user_loader
+def load_user(user_id):
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE userID = %s", (user_id,))
+    user = cursor.fetchone()
+    cursor.close()
+
+    if user:
+        return User(id=user['userID'], username=user['username'], password=user['password'])
+    return None
+
 
 @app.route("/")
+@login_required 
 def index():
     return render_template("index.html")
 
+@app.route('/verify_password', methods=['POST'])
+def verify_password():
+    data = request.json
+    password = data.get('password')
+
+    # Assume you have a database connection 'conn'
+    conn = connection  
+    cursor = conn.cursor(dictionary=True)
+    
+    # Retrieve the hashed password for the admin user
+    cursor.execute("SELECT password FROM users WHERE username = 'admin';")
+    result = cursor.fetchone()  # Fetch the first matching result
+    cursor.close()
+
+    # Check if the admin user exists and if the provided password matches the stored hash
+    if result and check_password_hash(result['password'], password):
+        return jsonify(success=True), 200
+    else:
+        return jsonify(success=False), 403
 
 @app.route('/materials', methods=['GET', 'POST'])
 def materials():
@@ -55,11 +103,14 @@ def materials():
 
     cursor.execute("SELECT * FROM materials")
     materials = cursor.fetchall()
+
+    
     cursor.close()
 
-    return render_template('materials.html', materials=materials,admin_password=os.getenv('ADMIN_PASSWORD'))
+    return render_template('materials.html', materials=materials,admin_password="Hello World")
 
-@app.route('/add', methods=['GET', 'POST'])
+@app.route('/material/add', methods=['GET', 'POST'])
+@login_required
 def add_material():
     if request.method == 'POST':
         name = request.form['name']
@@ -72,9 +123,10 @@ def add_material():
         flash("Material added successfully!")
         return redirect(url_for('materials'))
 
-    return render_template('add.html')
+    return render_template('material/add.html')
 
-@app.route('/update', methods=['GET', 'POST'])
+@app.route('/material/update', methods=['GET', 'POST'])
+@login_required 
 def update_material():
     cursor = connection.cursor(dictionary=True)
     
@@ -91,14 +143,14 @@ def update_material():
         return redirect(url_for('materials'))
 
     cursor.execute("SELECT * FROM materials")
-    materials = cursor.fetchall()
-    
-    return render_template('update.html', materials=materials)
+    materials = cursor.fetchall()    
+    return render_template('material/update.html', materials=materials)
 
 
-@app.route('/remove', methods=['GET', 'POST'])
+@app.route('/material/remove', methods=['GET', 'POST'])
+@login_required
 def remove_material():
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)
     
     if request.method == 'POST':
         material_id = request.form['id']
@@ -116,13 +168,9 @@ def remove_material():
         flash("Material removed and IDs reordered successfully!")
         return redirect(url_for('materials'))
 
-    cursor.execute("SELECT * FROM materials")
+    cursor.execute("SELECT id, name FROM materials")
     materials = cursor.fetchall()
-    
-    return render_template('remove.html', materials=materials)
-
-
-
+    return render_template('material/remove.html', materials=materials)
 
 @app.route("/products", methods=["GET", "POST"])
 def available_products():
@@ -155,6 +203,7 @@ def product():
 
 
 @app.route("/product/add")
+@login_required 
 def add_product():
     return render_template("add_product.html")
 
@@ -164,17 +213,32 @@ def login():
         username = request.form.get('username').strip()
         password = request.form.get('password').strip()
 
-        if username == "admin" and password == "admin":
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("select userID, password from users where username=%s" ,(username, ))
+        user = cursor.fetchone()
+        if user and check_password_hash(user["password"], password):
+            logged_in_user = User(id=user['userID'], username=username, password=user['password'])
+            login_user(logged_in_user)
             return redirect('/')
-        flash("Invalid Login", category='error')
-        return render_template("login.html", error=True)
+        flash("Invalid username or password", category='error')
+        # return render_template("login.html", error=True)
 
     return render_template("login.html")
 
 
 @app.route('/logout')
 def logout():
-    return redirect('/login')
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.errorhandler(404)
+def not_found(error=None):
+    return "O_0 404 NOT FOUND"
+
+@app.before_request
+def before_request():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(seconds=10)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", debug=True)

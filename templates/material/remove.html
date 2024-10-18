@@ -9,6 +9,12 @@
         <form action="{{ url_for('remove_material') }}" method="POST" style="display: inline-block; text-align: left; width: 300px;">
             <div class="form-group">
                 <label for="id">Material ID:</label>
+                <select>
+                    <option value="none" selected disabled hidden>Select an Option</option>
+                    {% for material in materials%}
+                    <option value="{{ material['id'] }}">{{ material['name'] }}</option>
+                    {% endfor %}
+                </select>
                 <input type="number" id="id" name="id" min="1" required>
             </div>
             <button type="submit" class="button">Remove Material</button>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Customer Information Container -->
+    <div class="container" id="step-1">
+        <h2>Customer Information</h2>
+        <form id="customer-form">
+            <div class="customer-info-row">
+                <div class="customer-field">
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="customer-field">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="customer-field">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" title="Enter a 10-digit phone number">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Product Information Container -->
+    <div class="container" id="step-2">
+        <h2>Product Information</h2>
+        <table id="product-table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price per Unit ($)</th>
+                    <th>Total ($)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="product-list">
+                <tr class="product-item" >
+                    <td><input type="text" class="product-name" name="product-name" style="height: 30px;" required></td>
+                    <td><input type="number" class="quantity" name="quantity" min="1" style="height: 30px;"  required></td>
+                    <td><input type="number" class="price" name="price" min="0.01" step="0.01" style="height: 30px;"  required></td>
+                    <td class="product-total">0.00</td>
+                    <td><button type="button" class="remove-product-btn">Remove</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" id="add-product-btn">Add</button>
+
+        <!-- Display grand total for all products -->
+        <h3 id="grand-total">Grand Total: $0.00</h3>
+
+        <button type="button" id="generate-btn">Generate Bill</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const productList = document.getElementById("product-list");
+    const addProductBtn = document.getElementById("add-product-btn");
+    const grandTotalElement = document.getElementById("grand-total");
+    const generateBillBtn = document.getElementById('generate-btn');
+
+    function calculateTotal() {
+        let grandTotal = 0;
+        const productItems = document.querySelectorAll('.product-item');
+        
+        productItems.forEach(item => {
+            const quantity = item.querySelector('.quantity').value;
+            const price = item.querySelector('.price').value;
+            const totalElement = item.querySelector('.product-total');
+
+            const total = (quantity * price) || 0;
+            totalElement.textContent = total.toFixed(2);
+
+            grandTotal += total;
+        });
+
+        grandTotalElement.textContent = `Grand Total: $${grandTotal.toFixed(2)}`;
+    }
+
+    productList.addEventListener('input', calculateTotal);
+
+    addProductBtn.addEventListener("click", function () {
+        const newRow = document.createElement("tr");
+        newRow.classList.add("product-item");
+
+        newRow.innerHTML = `
+            <td><input type="text" class="product-name" name="product-name" style="height: 30px;"  required></td>
+            <td><input type="number" class="quantity" name="quantity" min="1" style="height: 30px;"  required></td>
+            <td><input type="number" class="price" name="price" min="0.01" step="0.01" style="height: 30px;" required></td>
+            <td class="product-total">0.00</td>
+            <td><button type="button" class="remove-product-btn">Remove</button></td>
+        `;
+
+        productList.appendChild(newRow);
+
+        newRow.addEventListener('input', calculateTotal);
+
+        newRow.querySelector('.remove-product-btn').addEventListener("click", function () {
+            newRow.remove();
+            calculateTotal(); 
+        });
+
+        calculateTotal(); 
+    });
+
+    productList.querySelector('.remove-product-btn').addEventListener("click", function () {
+        this.closest('.product-item').remove();
+        calculateTotal(); 
+    });
+
+    calculateTotal();
+
+    generateBillBtn.addEventListener('click', function () {
+        const products = [];
+        document.querySelectorAll('.product-item').forEach(productItem => {
+            const productName = productItem.querySelector('.product-name').value;
+            const quantity = parseInt(productItem.querySelector('.quantity').value);
+            const price = parseFloat(productItem.querySelector('.price').value);
+
+            if (productName && quantity > 0 && price > 0) {
+                products.push({
+                    name: productName,
+                    quantity: quantity,
+                    price: price.toFixed(2)
+                });
+            }
+        });
+
+        if (products.length > 0) {
+            localStorage.setItem('products', JSON.stringify(products));
+
+            window.location.href = 'bill.html';
+        } else {
+            alert("Please fill out product details.");
+        }
+    });
+});
+
+    </script>
+</body>
+</html>

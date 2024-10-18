@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Manage Materials{% endblock %}
 {% block cssLink %}
-<link rel="stylesheet" href="{{ url_for('static', filename='material.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='./css/material.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -12,26 +12,11 @@
         <input type="text" id="searchInput" placeholder="Search for materials..." onkeyup="searchMaterials()" style="margin: 10px; padding: 8px;">
 
         <div>
-            <button onclick="openModal('/add');" class="button">Add new </button>
-            <button onclick="openModal('/update');" class="button">Update </button>
-            <button onclick="openModal('/remove');" class="button">Remove</button>
+            <a href="/material/add"><button class="button">Add new </button></a>
+            <a href="/material/update"><button class="button">Update </button></a>
+            <a href="/material/remove"><button class="button">Remove</button></a>
         </div>
     </div>
-
-    <div id="adminPasswordModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Admin Login</h2>
-            <p>Please enter the admin password to continue:</p>
-            <form id="adminLoginForm" onsubmit="return checkAdminPassword()">
-                <input type="password" id="adminPassword" required>
-                <input type="hidden" id="redirectUrl">
-                <button type="submit" class="button">Submit</button>
-            </form>
-            <p id="errorMsg" style="color: red; display: none;">Invalid password!</p>
-        </div>
-    </div>
-
     <table id="materialsTable" border="1" cellpadding="10" style="margin-top: 20px; width: 100%;">
         <thead>
             <tr>
@@ -53,42 +38,8 @@
         </tbody>
     </table>
 
-    
-    
-
     <script>
     const correctPassword = '{{ admin_password }}'; 
-        function openModal(url) {
-            document.getElementById('adminPasswordModal').style.display = 'block';
-            document.getElementById('redirectUrl').value = url;
-        }
-
-        function closeModal() {
-            document.getElementById('adminPasswordModal').style.display = 'none';
-            document.getElementById('errorMsg').style.display = 'none';  
-        }
-
-        function checkAdminPassword() {
-            var password = document.getElementById('adminPassword').value;
-            var redirectUrl = document.getElementById('redirectUrl').value;
-
-
-            if (password === correctPassword) {
-                window.location.href = redirectUrl;  
-                return false;  
-            } else {
-                document.getElementById('errorMsg').style.display = 'block';  
-                return false;  
-            }
-        }
-
-        window.onclick = function(event) {
-            var modal = document.getElementById('adminPasswordModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-
         function searchMaterials() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let table = document.getElementById('materialsTable');
