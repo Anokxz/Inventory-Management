@@ -3,6 +3,196 @@
 {% block title %}Inventory{% endblock %}
 
 <!-- Body -->
+{% block cssLink %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4ff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            padding: 20px;
+        }
+        .main {
+            flex: 1;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .header, .footer {
+            padding: 10px 20px;
+            background-color: #4c6ef5;
+            color: #ffffff;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .marquee-container {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .marquee-container img {
+            height: 120px; /* Increased size */
+            margin-right: 15px;
+        }
+        .dashboard-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .card {
+            background-color: #e9f0ff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 30%;
+            text-align: center;
+        }
+        .profit-section {
+            display: flex;
+            justify-content: space-between;
+        }
+        .profit-card {
+            background-color: #e9f0ff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 48%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .recent-sales, .available-products {
+            margin-top: 20px;
+        }
+        .recent-sales table, .available-products table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .recent-sales th, .recent-sales td, .available-products th, .available-products td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .recent-sales th, .available-products th {
+            background-color: #4c6ef5;
+            color: white;
+        }
+    </style>
+{% endblock %}
 {% block content %}
-    Hello
+    <div class="header">Inventory Dashboard</div>
+
+    <div class="container">
+        <div class="main">
+            <div class="dashboard-cards">
+                <div class="card">
+                    <h4>Total Sales</h4>
+                    <p>$500,000</p>
+                </div>
+                <div class="card">
+                    <h4>Total Income</h4>
+                    <p>$180,432</p>
+                </div>
+                <div class="card">
+                    <h4>Products Sold</h4>
+                    <p>5,490</p>
+                </div>
+            </div>
+
+            <div class="marquee-container">
+                <marquee behavior="scroll" direction="left">
+                    <img src="https://via.placeholder.com/150" alt="Product 1">
+                    <img src="https://via.placeholder.com/150" alt="Product 2">
+                    <img src="https://via.placeholder.com/150" alt="Product 3">
+                    <img src="https://via.placeholder.com/150" alt="Product 4">
+                </marquee>
+            </div>
+
+            <div class="profit-section">
+                <div class="profit-card">
+                    <h4>Monthly Profit</h4>
+                    <p>$15,000 (Oct 2024)</p>
+                </div>
+                <div class="profit-card">
+                    <h4>Yearly Profit</h4>
+                    <p>$150,000 (2024)</p>
+                </div>
+            </div>
+
+            <div class="recent-sales">
+                <h3>Recently Sold Products</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product</th>
+                            <th>Date</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#123565</td>
+                            <td>DJI Mavic Pro 2</td>
+                            <td>Oct 30, 2024</td>
+                            <td>$42.00</td>
+                            <td>Delivered</td>
+                        </tr>
+                        <tr>
+                            <td>#123568</td>
+                            <td>iPad Pro 2017 Model</td>
+                            <td>Oct 29, 2024</td>
+                            <td>$932.00</td>
+                            <td>Cancelled</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="available-products">
+                <h3>Available Products</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Product Name</th>
+                            <th>Stock</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#P1001</td>
+                            <td>Wireless Mouse</td>
+                            <td>150</td>
+                            <td>$25.00</td>
+                        </tr>
+                        <tr>
+                            <td>#P1002</td>
+                            <td>Keyboard</td>
+                            <td>80</td>
+                            <td>$45.00</td>
+                        </tr>
+                        <tr>
+                            <td>#P1003</td>
+                            <td>Monitor 24"</td>
+                            <td>35</td>
+                            <td>$150.00</td>
+                        </tr>
+                        <tr>
+                            <td>#P1004</td>
+                            <td>USB-C Cable</td>
+                            <td>300</td>
+                            <td>$10.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">Dashboard Footer</div>
 {% endblock %}

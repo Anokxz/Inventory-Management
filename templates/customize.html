@@ -15,44 +15,34 @@
 {% block content %}
   <div class="container mt-5">
     <h2 class="mb-4">Customize Your Furniture</h2>
-    <form>
+    <form action="{{ url_for('customize', id=product['PID']) }}" method="POST">
       <!-- Furniture Type -->
       <div class="mb-4">
-        <label class="form-label">Product ID: {{ product["PID"] }}</label><br>
-        <label class="form-label">Furniture Name: {{ product["name"] }}</label>
+        <label class="form-label" id="product_id">Product ID: {{ product["PID"] }}</label><br>
+        <label class="form-label" id="name">Furniture Name: {{ product["name"] }}</label>
       </div>
 
-      <!-- Style
-      <div class="mb-3">
-        <label for="style" class="form-label">Style</label>
-        <select class="form-select" id="style" required>
-          <option value="" selected disabled>Select a style</option>
-          <option value="modern">Modern</option>
-          <option value="classic">Classic</option>
-          <option value="rustic">Rustic</option>
-        </select>
-      </div> -->
 
       <!-- Dimensions -->
       <div class="row mb-3">
         <div class="col">
           <label for="length" class="form-label">Length (in cm)</label>
-          <input type="number" class="form-control" id="length" required>
+          <input type="number" class="form-control" id="length" name="length" required>
         </div>
         <div class="col">
           <label for="width" class="form-label">Width (in cm)</label>
-          <input type="number" class="form-control" id="width" required>
+          <input type="number" class="form-control" id="width" name="width" required>
         </div>
         <div class="col">
           <label for="height" class="form-label">Height (in cm)</label>
-          <input type="number" class="form-control" id="height" required>
+          <input type="number" class="form-control" id="height" name="height" required>
         </div>
       </div>
 
       <!-- Material -->
       <div class="mb-3">
         <label for="material" class="form-label">Material</label>
-        <select class="form-select" id="material" required>
+        <select class="form-select" id="material" name="material" required>
           <option value="" selected disabled>Select material</option>
           <option value="oak">Oak</option>
           <option value="pine">Pine</option>
@@ -62,21 +52,9 @@
         </select>
       </div>
 
-      <!-- Design Features
-      <div class="mb-3">
-        <label for="shape" class="form-label">Shape</label>
-        <select class="form-select" id="shape" required>
-          <option value="" selected disabled>Select shape</option>
-          <option value="rectangular">Rectangular</option>
-          <option value="circular">Circular</option>
-          <option value="l-shaped">L-shaped</option>
-        </select>
-      </div>
-     -->
-      <!-- Extra Description Text Area -->
       <div class="mb-3">
         <label for="extraDescription" class="form-label">Additional Description or Requests</label>
-        <textarea class="form-control" id="extraDescription" rows="4" placeholder="Provide any additional customization details or special requests here..."></textarea>
+        <textarea class="form-control" id="extraDescription" name="extraDescription" rows="4" placeholder="Provide any additional customization details or special requests here..."></textarea>
       </div>
   
       <!-- Submit Button -->
