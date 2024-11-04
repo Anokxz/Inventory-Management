@@ -1,9 +1,106 @@
 {% extends "layout.html" %}
 {% block title %}Manage Custom Products{% endblock %}
 {% block cssLink %}
-<!-- CSS LINK -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    /* Add custom styles */
+    .container {
+      margin-top: 50px;
+    }
+    h2 {
+      color: #333;
+      font-weight: bold;
+    }
+    .table {
+      border-collapse: collapse; /* Ensure borders are merged */
+      width: 100%; /* Full width */
+      background-color: #f9f9f9; /* Light background color for the table */
+      border: 1px solid #ddd; /* Border around the table */
+      border-radius: 8px; /* Rounded corners for the table */
+    }
+    .table th, .table td {
+      border: 1px solid #ddd; /* Border around each cell */
+      padding: 12px; /* Cell padding */
+      text-align: left; /* Align text to the left */
+      vertical-align: middle; /* Center align vertically */
+    }
+    .table th {
+      background-color: hsl(192, 64%, 42%); /* Header background color */
+      color: white; /* Header text color */
+      font-weight: bold; /* Bold header text */
+    }
+    .table tr:nth-child(even) {
+      background-color: #f2f2f2; /* Light gray for even rows */
+    }
+    .table tr:hover {
+      background-color: #e0e0e0; /* Light gray on hover */
+    }
+    .status-pending {
+      color: #ff052e;
+      font-weight: bold;
+    }
+    .status-in-progress {
+      color: hsl(251, 76%, 46%);
+      font-weight: bold;
+    }
+    .status-completed {
+      color: hsl(134, 61%, 27%);
+      font-weight: bold;
+    }
+    .status-select {
+      width: 100%;
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #ddd; /* Border for dropdown */
+      background-color: #fff; /* White background for dropdown */
+    }
+    .status-select:hover {
+      cursor: pointer;
+      opacity: 0.8; /* Slightly dim on hover */
+    }
+  </style>
 {% endblock %}
 {% block content %}
-    <!-- <a href="/customize/add"><button>Add New</button></a> -->
-     TABLE FOR Customization DETAILS
+<div class="container">
+  <h2 class="mb-4">Customization Orders</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Length (cm)</th>
+        <th>Width (cm)</th>
+        <th>Height (cm)</th>
+        <th>Material</th>
+        <th>Additional Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for customization in customizations %}
+      <tr>
+        <td>{{ customization['id'] }}</td>
+        <td>{{ customization['product_id'] }}</td>
+        <td>{{ customization['name'] }}</td>
+        <td>{{ customization['length'] }}</td>
+        <td>{{ customization['width'] }}</td>
+        <td>{{ customization['height'] }}</td>
+        <td>{{ customization['material'] }}</td>
+        <td>{{ customization['description'] }}</td>
+        <td>
+          <form action="{{ url_for('update_status') }}" method="POST">
+            <input type="hidden" name="customization_id" value="{{ customization['id'] }}">
+            <select name="status" class="status-select {% if customization['status'] == 'pending' %}status-pending{% elif customization['status'] == 'in progress' %}status-in-progress{% elif customization['status'] == 'completed' %}status-completed{% endif %}" onchange="this.form.submit()">
+              <option value="pending" {% if customization['status'] == 'pending' %}selected{% endif %}>Pending</option>
+              <option value="in progress" {% if customization['status'] == 'in progress' %}selected{% endif %}>In Progress</option>
+              <option value="completed" {% if customization['status'] == 'completed' %}selected{% endif %}>Completed</option>
+            </select>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

@@ -35,7 +35,7 @@ dbconfig = {
 
 connection_pool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="mypool",
-    pool_size=32,  # Adjust the pool size as needed
+    pool_size=6,  # Adjust the pool size as needed
     **dbconfig
 )
 class User(UserMixin):
@@ -94,9 +94,7 @@ def update_material():
 
 @app.route('/material/remove', methods=['GET', 'POST'])
 @login_required
-def remove_material():
-    cursor = connection.cursor(dictionary=True)
-    
+def remove_material():    
     if request.method == 'POST':
         material_id = request.form['id']
 
@@ -153,7 +151,7 @@ def add_product():
 @app.route("/product/remove" , methods=['GET', 'POST'])
 @login_required 
 def remove_product():
-    if request.method == "POST" :
+    if request.method == 'POST' :
         id = request.form["product_id"]
         sql_execute("DELETE FROM products WHERE PID = %s", (id,))
         sql_execute("SET @new_id = 0;")
@@ -204,14 +202,54 @@ def add_transactions():
 def bill_transactions():
     return render_template("bill.html")
 
-@app.route('/customize')
-def customize_status():
-    return render_template("customize_status.html")
+@app.route('/update_status', methods=['POST'])
+def update_status():
+    customization_id = request.form['customization_id']
+    new_status = request.form['status']
+    try:
+        sql_execute(
+            "UPDATE customizations SET status = %s WHERE id = %s",
+            (new_status, customization_id)
+        )
+        flash('Status updated successfully!', 'success')
+    except Exception as e:
+        flash('An error occurred while updating status.', 'error')
+        print(e)  # For debugging
 
-@app.route('/customize/<int:id>')
+    return redirect(url_for('customize_status'))
+
+# Route to render the customization details page
+@app.route('/customize_status')
+def customize_status():
+    sql_execute("SET @new_id = 0;")
+    sql_execute("UPDATE customizations SET id = (@new_id := @new_id + 1);")
+    sql_execute("ALTER TABLE customizations AUTO_INCREMENT = 1;") 
+    customizations = sql_execute("SELECT * FROM customizations")
+    return render_template("customize_status.html", customizations=customizations)
+
+@app.route('/customize/<int:id>', methods=['GET', 'POST'])
 def customize(id):
     product = sql_execute("select PID, name from products where PID = %s", (id, ))[0]
-    return render_template("customize.html", product=product)
+
+    if request.method == 'POST':
+        # Retrieve form data
+        product_id = product['PID']
+        name=product['name']
+        length = request.form['length']
+        width = request.form['width']
+        height = request.form['height']
+        material = request.form['material']
+        extra_description = request.form['extraDescription']
+
+        # Save the data to the database
+        sql_execute("INSERT INTO customizations (product_id,name, length, width, height, material, description) VALUES (%s,%s, %s, %s, %s, %s, %s)",
+                    (id,name, length, width, height, material, extra_description))
+
+        flash('Customization saved successfully!', 'success')
+        return redirect(url_for('customize_status'))
+
+    
+    return render_template("customize.html", product=product)  
 
 @app.route('/logout')
 def logout():
