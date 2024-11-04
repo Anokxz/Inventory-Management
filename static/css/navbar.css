@@ -9,6 +9,12 @@ body {
   display: flex;
   justify-content: start;
   align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 999; /* Ensures the navbar stays on top of other elements */
   border-radius: 0 0 3px 3px;
 }
 
@@ -17,6 +23,20 @@ body {
   font-size: 2rem;
   background: none;
   color: white;
+  cursor: pointer;
+}
+
+.nav-login {
+  margin-left: auto;
+  font-size: 2rem;
+  color: white;
+}
+
+.nav-login a {
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
 }
 
 .nav-menu {
@@ -29,13 +49,12 @@ body {
   top: 0;
   left: -100%;
   transition: 650ms;
+  z-index: 998; /* Sidebar will be below the navbar */
 }
 
 .nav-menu.active {
   left: 0;
   transition: 350ms;
-  margin: 0;
-  padding: 0;
 }
 
 .nav-text {
@@ -82,21 +101,12 @@ span {
   margin-left: 16px;
 }
 
-.nav-login {
-  margin-left: 2rem;
-  font-size: 2rem;
-  background: none;
-  margin-left: 92%;
-  color: white;
-}
-
-/* Content section styles */
 .content {
   transition: margin-left 0.3s ease;
   margin-left: 0;
+  margin-top: 100px;
   padding: 0;
 }
-
 
 .nav-menu.active ~ .content {
   margin-left: 250px;

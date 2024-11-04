@@ -1,11 +1,12 @@
-{% extends "layout.html" %}
-{% block title %}Bill{% endblock %}
-{% block cssLink %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/transaction.css') }}">
-{% endblock %}
-
-    
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
     <div class="container">
         <h2>Bill Receipt</h2>
         <div id="bill-details">
@@ -93,4 +94,5 @@
             doc.save(`${customerName}_bill.pdf`);
         });
     </script>
-{% endblock %}
+</body>
+</html>

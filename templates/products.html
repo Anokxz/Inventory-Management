@@ -9,21 +9,36 @@
 {% block content%}
   <main>  
    <section class="products">  
-    <h1>Furniture Products</h1>  
+    <h1>Furniture Products</h1>
+    
+        <!-- Flash messages section -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <!-- End Flash messages section -->
+       
     <div class="search-bar">  
       <input type="text" id="search" placeholder="Search products...">  
       <button id="filter">Search</button>
       <a href="/product/add" id="filter" style="text-decoration: none;"><span type="button">Add Product</span></a>
+      <!-- <a href="/product/update" id="filter" style="text-decoration: none;"><span type="button">Update Product</span></a> -->
+      <a href="/product/remove" id="filter" style="text-decoration: none;"><span type="button">Remove Product</span></a>
       <!-- <a href="/product/" id="filter" style="text-decoration: none;"><span type="button">Remove Product</span></a>  -->
     </div>  
     <div class="product-grid">
       {% for product in products %}
-      <div class="product">
-        <img src="data:image/jpeg;base64,{{ product['Img'] }}" alt="{{ product['name'] }}">
-        <h2>{{ product['name'] }}</h2>  
-        <p><strong>Price:</strong> <span>Rs{{ product['Price'] }}</span></p>  
-        <p><strong>Description:</strong> {{ product['Descript'] }}</p>  
-      </div>
+        <div class="product" onclick="window.location.href = `/product/{{ product['PID']}}`;">
+          <img src="data:image/jpeg;base64,{{ product['Img'] }}" alt="{{ product['name'] }}">
+          <h2>{{ product['name'] }}</h2>  
+          <p><strong>Price:</strong> <span>Rs{{ product['Price'] }}</span></p>  
+          <p><strong>Description:</strong> {{ product['Descript'] }}</p>  
+        </div>
       {% endfor %}      
    </section>  
   </main>  

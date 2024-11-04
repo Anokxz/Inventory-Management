@@ -1,10 +1,12 @@
-{% extends "layout.html" %}
-{% block title %}Billing Page{% endblock %}
-{% block cssLink %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/transaction.css') }}">
-{% endblock %}
-    
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
     <!-- Customer Information Container -->
     <div class="container" id="step-1">
         <h2>Customer Information</h2>
@@ -135,7 +137,7 @@
         if (products.length > 0) {
             localStorage.setItem('products', JSON.stringify(products));
 
-            window.location.href = '/transaction/bill';
+            window.location.href = 'bill.html';
         } else {
             alert("Please fill out product details.");
         }
@@ -143,4 +145,5 @@
 });
 
     </script>
-{% endblock %}
+</body>
+</html>

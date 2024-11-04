@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+<!-- Title -->
+{% block title %}Remove Product{% endblock %}
+{% block cssLink %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/remove_product.css') }}">
+{% endblock %}
+{% block content %}
+        <h1>Remove a Product</h1>
+        
+        <!-- {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %} -->
+
+        <form  method="POST">
+            <div class="form-group">
+                <label for="product_id">Select Product to Remove:</label>
+                <select id="product_id" name="product_id" required>
+                    {% for product in products %}
+                        <option value="{{ product.PID }}">{{ product.name }} ({{ product.category }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-danger">Remove Product</button>
+        </form>
+    </div>
+{% endblock %}

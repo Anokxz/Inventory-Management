@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='add_product.css') }}">
-</head>
-<body>
+{% extends "layout.html" %}
+<!-- Title -->
+{% block title %}Add Product{% endblock %}
+{% block cssLink %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_product.css') }}">
+{% endblock %}
+{% block content %}
     <div class="container">
         <h1>Add a New Product</h1>
         
@@ -18,7 +16,7 @@
             {% endif %}
         {% endwith %}
 
-        <form action="/product" method="POST" enctype="multipart/form-data">
+        <form  method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">Product Name:</label>
                 <input type="text" id="name" name="name" required>
@@ -57,5 +55,4 @@
             <button type="submit">Add Product</button>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}

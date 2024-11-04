@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+<!-- Title -->
+{% block title %}Update Product{% endblock %}
+
+{% block cssLink %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/update_product.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Update Product</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="/update_product" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="product_id">Select Product to Update:</label>
+                <select id="product_id" name="product_id" required>
+                    {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.name }} ({{ product.category }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Product Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <input type="text" id="category" name="category" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="psize">Product Size:</label>
+                <input type="text" id="psize" name="psize" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="in_stock_count">In Stock Count:</label>
+                <input type="number" id="in_stock_count" name="in_stock_count" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Product Image (Optional):</label>
+                <input type="file" id="image" name="image" accept="image/*">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Update Product</button>
+        </form>
+    </div>
+{% endblock %}

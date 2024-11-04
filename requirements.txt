@@ -1,2 +1,5 @@
 flask
 mysql-connector-python
+python-dotenv
+flask_login
+Werkzeug
