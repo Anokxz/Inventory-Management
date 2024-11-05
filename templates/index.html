@@ -2,197 +2,180 @@
 <!-- Title -->
 {% block title %}Inventory{% endblock %}
 
-<!-- Body -->
+<!-- CSS Styling -->
 {% block cssLink %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4ff;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            display: flex;
-            padding: 20px;
-        }
-        .main {
-            flex: 1;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .header, .footer {
-            padding: 10px 20px;
-            background-color: #4c6ef5;
-            color: #ffffff;
-            text-align: center;
-            border-radius: 10px;
-        }
-        .marquee-container {
-            margin: 20px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-        }
-        .marquee-container img {
-            height: 120px; /* Increased size */
-            margin-right: 15px;
-        }
-        .dashboard-cards {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .card {
-            background-color: #e9f0ff;
-            border-radius: 10px;
-            padding: 20px;
-            width: 30%;
-            text-align: center;
-        }
-        .profit-section {
-            display: flex;
-            justify-content: space-between;
-        }
-        .profit-card {
-            background-color: #e9f0ff;
-            border-radius: 10px;
-            padding: 20px;
-            width: 48%;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .recent-sales, .available-products {
-            margin-top: 20px;
-        }
-        .recent-sales table, .available-products table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .recent-sales th, .recent-sales td, .available-products th, .available-products td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        .recent-sales th, .available-products th {
-            background-color: #4c6ef5;
-            color: white;
-        }
-    </style>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f4ff;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+    .main {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .header, .footer {
+        padding: 10px 20px;
+        background-color: #4c6ef5;
+        color: #ffffff;
+        text-align: center;
+        border-radius: 10px;
+    }
+    .dashboard-cards {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .card {
+        background-color: #e9f0ff;
+        border-radius: 10px;
+        padding: 20px;
+        width: 23%;
+        text-align: center;
+    }
+    .marquee-container {
+        margin: 20px 0;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        overflow: hidden;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+    .marquee-container img {
+        height: 120px;
+        margin-right:  100px;
+        margin: 10px 20px;
+        justify-content: space-between;
+        display: inline-block;
+
+    }
+
+    .marquee-container img:last-child {
+        margin-right: 0;
+    }
+   
+    .chart-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-around;
+    }
+    .chart-box {
+        width: 45%;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+    
+    #DistributionChart{
+        display: flex;
+        align-items: center;    
+        height: 50vh; 
+        justify-content: center; 
+    }
+  
+</style>
 {% endblock %}
+
+<!-- Main Content -->
 {% block content %}
-    <div class="header">Inventory Dashboard</div>
+<div class="header">Shopkeeper Dashboard</div>
 
-    <div class="container">
-        <div class="main">
-            <div class="dashboard-cards">
-                <div class="card">
-                    <h4>Total Sales</h4>
-                    <p>$500,000</p>
-                </div>
-                <div class="card">
-                    <h4>Total Income</h4>
-                    <p>$180,432</p>
-                </div>
-                <div class="card">
-                    <h4>Products Sold</h4>
-                    <p>5,490</p>
-                </div>
+<div class="container">
+    <div class="main">
+        <div class="dashboard-cards">
+            <div class="card">
+                <h4>Total Sales</h4>
+                <p>₹500,000</p>
             </div>
-
-            <div class="marquee-container">
-                <marquee behavior="scroll" direction="left">
-                    <img src="https://via.placeholder.com/150" alt="Product 1">
-                    <img src="https://via.placeholder.com/150" alt="Product 2">
-                    <img src="https://via.placeholder.com/150" alt="Product 3">
-                    <img src="https://via.placeholder.com/150" alt="Product 4">
-                </marquee>
+            <div class="card">
+                <h4>Total Income</h4>
+                <p>₹180,432</p>
             </div>
+            <div class="card">
+                <h4>Products Sold</h4>
+                <p>5,490</p>
+            </div>
+            <div class="card">
+                <h4>Total Available Products</h4>
+                <p>565</p>
+            </div>
+        </div>
 
-            <div class="profit-section">
-                <div class="profit-card">
-                    <h4>Monthly Profit</h4>
-                    <p>$15,000 (Oct 2024)</p>
+        <div class="marquee-container">
+            <marquee behavior="scroll" direction="left">
+                <img src="https://thumbs.dreamstime.com/b/intricate-carving-design-wooden-coffee-table-minimalist-setting-white-background-high-quality-showcase-300619568.jpg" alt="Sofa">
+                <img src="https://cdn.pixelspray.io/v2/black-bread-289bfa/TIw66q/wrkr/t.resize(h:1240,w:1400)/data/Westelm/12mar2024/10123131_4.jpg" alt="Table">
+                <img src="https://img.freepik.com/premium-photo/classic-bed-with-builtin-nightstands-with-pure-white-background_1024117-19447.jpg" alt="Chair">
+                <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcR70ZCoiXAd6wN7YrFR7lGSi1mtE9-qccIqRcx7IH9ok7AzStX55FpqFqQVKjufDkCqTmijHnhhK-GloExPiuLWoHV6soP1ouyxamc3rE89QITIo1SGavQP5co" alt="Bed">
+            </marquee>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-box"> 
+                <h4>Monthly Profit</h4>
+                <canvas id="monthlyProfitChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h4>Sales Distribution by Product</h4>
+                <div id="DistributionChart">
+                    <canvas id="salesDistributionChart"></canvas>
                 </div>
-                <div class="profit-card">
-                    <h4>Yearly Profit</h4>
-                    <p>$150,000 (2024)</p>
-                </div>
-            </div>
-
-            <div class="recent-sales">
-                <h3>Recently Sold Products</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Product</th>
-                            <th>Date</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#123565</td>
-                            <td>DJI Mavic Pro 2</td>
-                            <td>Oct 30, 2024</td>
-                            <td>$42.00</td>
-                            <td>Delivered</td>
-                        </tr>
-                        <tr>
-                            <td>#123568</td>
-                            <td>iPad Pro 2017 Model</td>
-                            <td>Oct 29, 2024</td>
-                            <td>$932.00</td>
-                            <td>Cancelled</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="available-products">
-                <h3>Available Products</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Product ID</th>
-                            <th>Product Name</th>
-                            <th>Stock</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#P1001</td>
-                            <td>Wireless Mouse</td>
-                            <td>150</td>
-                            <td>$25.00</td>
-                        </tr>
-                        <tr>
-                            <td>#P1002</td>
-                            <td>Keyboard</td>
-                            <td>80</td>
-                            <td>$45.00</td>
-                        </tr>
-                        <tr>
-                            <td>#P1003</td>
-                            <td>Monitor 24"</td>
-                            <td>35</td>
-                            <td>$150.00</td>
-                        </tr>
-                        <tr>
-                            <td>#P1004</td>
-                            <td>USB-C Cable</td>
-                            <td>300</td>
-                            <td>$10.00</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="footer">Dashboard Footer</div>
+<div class="footer">Dashboard Footer</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Monthly Profit Bar Chart
+    const monthlyProfitCtx = document.getElementById('monthlyProfitChart').getContext('2d');
+    new Chart(monthlyProfitCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Profit (₹)',
+                data: [12000, 15000, 8000, 19000, 14000, 22000, 17000, 25000, 21000, 30000, 27000, 35000],
+                backgroundColor: '#4c6ef5'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Sales Distribution Pie Chart
+    const salesDistributionCtx = document.getElementById('salesDistributionChart').getContext('2d');
+    new Chart(salesDistributionCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Sofa', 'Table', 'Chair', 'Bed'],
+            datasets: [{
+                label: 'Sales Distribution',
+                data: [30, 25, 20, 25],
+                backgroundColor: ['#4c6ef5', '#ff6384', '#36a2eb', '#ffcd56']
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
 {% endblock %}
