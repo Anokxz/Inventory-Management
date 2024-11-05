@@ -1,5 +1,6 @@
 flask
 mysql-connector-python
 python-dotenv
-Flask_Login
+flask_login
 Werkzeug
+fpdf

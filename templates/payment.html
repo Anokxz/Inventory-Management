@@ -1,49 +1,47 @@
 {% extends "layout.html" %}
-<!-- Title -->
-{% block title %}Payment{% endblock %}
+{% block title %}Transaction History{% endblock %}
 {% block cssLink %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/payment.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/transaction.css') }}">
 {% endblock %}
-<!-- Body -->
+
 {% block content %}
-    <div class="transaction-container">
-        <h2>Transaction History</h2>
-        <table id="transactionTable">
-            <thead>
-                <tr>
-                    <th>Transaction Type</th>
-                    <th>Dealer/Customer</th>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price per Unit ($)</th>
-                    <th>Total Price ($)</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-
-        <a href="/transaction/add" class="submit-btn">Add New Transaction</a>
+<!-- Flash messages section -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <!-- End Flash messages section -->
+<div class="container">
+    <h2>Transaction History</h2>
+    <div class="add-transaction-btn">
+        <a href="{{ url_for('add_transactions') }}" class="btn btn-success">Add Transaction</a>
     </div>
+    <table id="transaction-table">
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Customer Name</th>
+                <th>Total Amount (Rs)</th>
+                <th>Date</th>
+                <th>Invoice</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction['transaction_id'] }}</td>
+                <td>{{ transaction['customer_name'] }}</td>
+                <td>{{ transaction['grand_total'] }}</td>
+                <td>{{ transaction['transaction_date'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-            const tableBody = document.querySelector('#transactionTable tbody');
-
-            transactions.forEach(transaction => {
-                const newRow = tableBody.insertRow();
-                newRow.classList.add(transaction.type === 'buy' ? 'buy' : 'sale'); 
-
-                newRow.innerHTML = `
-                    <td>${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</td>
-                    <td>${transaction.entity}</td>
-                    <td>${transaction.product}</td>
-                    <td>${transaction.quantity}</td>
-                    <td>${transaction.price.toFixed(2)}</td>
-                    <td>${transaction.totalPrice.toFixed(2)}</td>
-                `;
-            });
-        });
-    </script>
 {% endblock %}
