@@ -8,9 +8,10 @@
 </head>
 <body>
     <!-- Customer Information Container -->
+    <form id="customer-form">
     <div class="container" id="step-1">
         <h2>Customer Information</h2>
-        <form id="customer-form">
+        
             <div class="customer-info-row">
                 <div class="customer-field">
                     <label for="name">Full Name:</label>
@@ -25,7 +26,7 @@
                     <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" title="Enter a 10-digit phone number">
                 </div>
             </div>
-        </form>
+        
     </div>
 
     <!-- Product Information Container -->
@@ -37,7 +38,7 @@
                     <th>Product Name</th>
                     <th>Quantity</th>
                     <th>Price per Unit ($)</th>
-                    <th>Total ($)</th>
+                    <th>Total (Rs)</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -57,11 +58,12 @@
         <!-- Display grand total for all products -->
         <h3 id="grand-total">Grand Total: $0.00</h3>
 
-        <button type="button" id="generate-btn">Generate Bill</button>
+        <button type="submit" id="generate-btn">Generate Bill</button>
+    </form>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
     const productList = document.getElementById("product-list");
     const addProductBtn = document.getElementById("add-product-btn");
     const grandTotalElement = document.getElementById("grand-total");
@@ -117,31 +119,6 @@
     });
 
     calculateTotal();
-
-    generateBillBtn.addEventListener('click', function () {
-        const products = [];
-        document.querySelectorAll('.product-item').forEach(productItem => {
-            const productName = productItem.querySelector('.product-name').value;
-            const quantity = parseInt(productItem.querySelector('.quantity').value);
-            const price = parseFloat(productItem.querySelector('.price').value);
-
-            if (productName && quantity > 0 && price > 0) {
-                products.push({
-                    name: productName,
-                    quantity: quantity,
-                    price: price.toFixed(2)
-                });
-            }
-        });
-
-        if (products.length > 0) {
-            localStorage.setItem('products', JSON.stringify(products));
-
-            window.location.href = 'bill.html';
-        } else {
-            alert("Please fill out product details.");
-        }
-    });
 });
 
     </script>

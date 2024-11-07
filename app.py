@@ -8,6 +8,7 @@ import os
 from dotenv import load_dotenv
 import mysql.connector
 from werkzeug.security import check_password_hash
+from fpdf import FPDF
 
 # Initialize Flask APP
 app = Flask(__name__)
@@ -162,10 +163,10 @@ def remove_product():
     products = sql_execute("select PID, name, category from products;")
     return render_template("product/remove.html", products=products)
 
-@app.route("/product/update")
-@login_required 
-def update_product():
-    return render_template("product/update.html")
+# @app.route("/product/update")
+# @login_required 
+# def update_product():
+#     return render_template("product/update.html")
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -186,20 +187,74 @@ def login():
 @app.route('/transactions')
 @login_required
 def transactions():
-    # cursor = connection.cursor(dictionary=True)
-    # cursor.execute("SELECT * FROM transactions;") 
-    # transactions = cursor.fetchall()
-
-    return render_template("payment.html")
+    transactions = sql_execute("SELECT * FROM transactions;") 
+    return render_template("payment.html", transactions=transactions)
 
 @app.route('/transaction/add')
 @login_required
 def add_transactions():
     return render_template("add_transaction.html")
 
-@app.route('/transaction/bill')
+@app.route('/transaction/bill', methods=['POST', 'GET'])
 @login_required
 def bill_transactions():
+    if request.method == 'POST':
+        # Extract form data
+        customer_name = request.form['name']
+        customer_email = request.form['email']
+        customer_phone = request.form['phone']
+        product_names = request.form.getlist('product-name')
+        quantities = request.form.getlist('quantity')
+        prices = request.form.getlist('price')
+
+        # Calculate grand total
+        grand_total = 0
+        products = []
+        for name, quantity, price in zip(product_names, quantities, prices):
+            total = int(quantity) * float(price)
+            grand_total += total
+            products.append({'name': name, 'quantity': quantity, 'price': price, 'total': total})
+
+
+        sql_execute("INSERT INTO transactions(customer_name, customer_email, customer_phone, grand_total) VALUES (%s, %s, %s, %s)" , (customer_name, customer_email, customer_phone, grand_total))
+        transaction_id = sql_execute("SELECT LAST_INSERT_ID() as id")[0]['id']
+
+        # Insert products into 'transaction_products'
+        insert_product_query = """
+            INSERT INTO transaction_products (transaction_id, product_name, quantity, price_per_unit, total)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        for product in products:
+            sql_execute(insert_product_query, (transaction_id, product['name'], product['quantity'], product['price'], product['total']))
+
+        # Generate PDF invoice
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+        pdf.cell(200, 10, txt="Invoice", ln=True, align='C')
+        pdf.cell(200, 10, txt=f"Transaction ID: {transaction_id}", ln=True)
+        pdf.cell(200, 10, txt=f"Customer Name: {customer_name}", ln=True)
+        pdf.cell(200, 10, txt=f"Customer Email: {customer_email}", ln=True)
+        pdf.cell(200, 10, txt=f"Phone: {customer_phone}", ln=True)
+        pdf.cell(200, 10, txt=f"Grand Total: ${grand_total:.2f}", ln=True)
+
+        # Add product details to the invoice
+        for product in products:
+            pdf.cell(200, 10, txt=f"{product['name']} - Qty: {product['quantity']} - Unit Price: ${product['price']} - Total: ${product['total']:.2f}", ln=True)
+
+        # # Get the PDF binary content
+        # pdf_output = BytesIO()
+        # pdf.output(pdf_output)
+        # pdf_output.seek(0)
+        # pdf_binary = pdf_output.getvalue()
+
+        # # Store the PDF binary as LONGBLOB in the database
+        # update_invoice_query = "UPDATE transactions SET invoice_pdf = %s WHERE transaction_id = %s"
+        # sql_execute(update_invoice_query, (pdf_binary, transaction_id))
+
+        flash("Transaction successful and invoice generated!", "success")
+        return redirect(url_for('transactions'))
+
     return render_template("bill.html")
 
 @app.route('/update_status', methods=['POST'])
@@ -279,8 +334,9 @@ def sql_execute(command, fields=()):
             output = cursor.fetchall()
         else:
             output = []
-    except:
-        output = []
+    except Exception as e:
+        print(e)
+        output = None
     finally:
         connection.commit()  
         cursor.close()
