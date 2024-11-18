@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, make_response, redirect, url_for, flash, send_file, jsonify, session
+from flask import Flask, request, render_template, make_response, redirect, url_for, flash, send_file, jsonify, session,send_from_directory, abort
+
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from datetime import timedelta
 from io import BytesIO
@@ -32,6 +33,7 @@ dbconfig = {
     "password":DB_PASSWD, 
     "database":"mini",
     "port": 24967,
+    # "ssl_disabled": True,
 }
 
 connection_pool = mysql.connector.pooling.MySQLConnectionPool(
@@ -217,7 +219,7 @@ def bill_transactions():
 
 
         sql_execute("INSERT INTO transactions(customer_name, customer_email, customer_phone, grand_total) VALUES (%s, %s, %s, %s)" , (customer_name, customer_email, customer_phone, grand_total))
-        transaction_id = sql_execute("SELECT LAST_INSERT_ID() as id")[0]['id']
+        transaction_id = sql_execute("select max(transaction_id) as id from transactions")[0]["id"]
 
         # Insert products into 'transaction_products'
         insert_product_query = """
@@ -227,35 +229,43 @@ def bill_transactions():
         for product in products:
             sql_execute(insert_product_query, (transaction_id, product['name'], product['quantity'], product['price'], product['total']))
 
-        # Generate PDF invoice
+        #create invoice and store it in mysql 
+        #TODO
         pdf = FPDF()
         pdf.add_page()
         pdf.set_font("Arial", size=12)
         pdf.cell(200, 10, txt="Invoice", ln=True, align='C')
-        pdf.cell(200, 10, txt=f"Transaction ID: {transaction_id}", ln=True)
-        pdf.cell(200, 10, txt=f"Customer Name: {customer_name}", ln=True)
-        pdf.cell(200, 10, txt=f"Customer Email: {customer_email}", ln=True)
-        pdf.cell(200, 10, txt=f"Phone: {customer_phone}", ln=True)
-        pdf.cell(200, 10, txt=f"Grand Total: ${grand_total:.2f}", ln=True)
 
-        # Add product details to the invoice
+        # Add details
+        pdf.cell(200, 10, txt=f"Customer: {customer_name}", ln=True)
         for product in products:
-            pdf.cell(200, 10, txt=f"{product['name']} - Qty: {product['quantity']} - Unit Price: ${product['price']} - Total: ${product['total']:.2f}", ln=True)
+            pdf.cell(200, 10, txt=f"{product['name']} - Qty: {product['quantity']} - Total: {product['total']}", ln=True)
 
-        # # Get the PDF binary content
-        # pdf_output = BytesIO()
-        # pdf.output(pdf_output)
-        # pdf_output.seek(0)
-        # pdf_binary = pdf_output.getvalue()
+        filename = f"invoice_{transaction_id}.pdf"
+        invoice_path = f"static/invoices/{filename}"
+        
+        if not os.path.exists("static/invoices"):
+            os.makedirs("static/invoices")
 
-        # # Store the PDF binary as LONGBLOB in the database
-        # update_invoice_query = "UPDATE transactions SET invoice_pdf = %s WHERE transaction_id = %s"
-        # sql_execute(update_invoice_query, (pdf_binary, transaction_id))
+        pdf.output(invoice_path)
 
+        # Optional: Store path in DB
+        sql_execute("UPDATE transactions SET invoice=%s WHERE transaction_id=%s", (filename, transaction_id))
         flash("Transaction successful and invoice generated!", "success")
         return redirect(url_for('transactions'))
 
     return render_template("bill.html")
+
+@app.route('/invoice/<filename>')
+@login_required
+def serve_invoice(filename):
+    invoice_directory = 'static/invoices'  # Path where invoices are stored
+    
+    # Ensure the invoice exists
+    if not os.path.exists(os.path.join(invoice_directory, filename)):
+        abort(404)  # File not found, return 404 error
+    
+    return send_from_directory(invoice_directory, filename)
 
 @app.route('/update_status', methods=['POST'])
 def update_status():

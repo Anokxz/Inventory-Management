@@ -40,7 +40,17 @@
       <li class="nav-text"><a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
     </ul>
   </nav>
-
+  <!-- Flash messages section -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+<!-- End Flash messages section -->
   <!-- Main Content Section -->
   <div class="content">
     {% block content %}

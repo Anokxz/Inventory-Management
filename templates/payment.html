@@ -15,11 +15,11 @@
           </div>
         {% endif %}
       {% endwith %}
-      <!-- End Flash messages section -->
+<!-- End Flash messages section -->
 <div class="container">
     <h2>Transaction History</h2>
     <div class="add-transaction-btn">
-        <a href="{{ url_for('add_transactions') }}" class="btn btn-success">Add Transaction</a>
+        <button><a href="{{ url_for('add_transactions') }}" class="btn btn-success" style="text-decoration: none">Add Transaction</a></button>
     </div>
     <table id="transaction-table">
         <thead>
@@ -38,6 +38,7 @@
                 <td>{{ transaction['customer_name'] }}</td>
                 <td>{{ transaction['grand_total'] }}</td>
                 <td>{{ transaction['transaction_date'] }}</td>
+                <td><a href="{{ url_for('serve_invoice', filename=transaction['invoice'])}}">View Invoice</a></td>
             </tr>
             {% endfor %}
         </tbody>
