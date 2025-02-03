@@ -33,7 +33,7 @@ dbconfig = {
     "password":DB_PASSWD, 
     "database":"mini",
     "port": 24967,
-    # "ssl_disabled": True,
+    "ssl_disabled": True,
 }
 
 connection_pool = mysql.connector.pooling.MySQLConnectionPool(
