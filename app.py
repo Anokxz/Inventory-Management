@@ -11,9 +11,11 @@ import mysql.connector
 from werkzeug.security import check_password_hash
 from fpdf import FPDF
 
+import db_init
+
 # Initialize Flask APP
 app = Flask(__name__)
-app.secret_key = "mini-inventory"
+app.secret_key = os.getenv("SECRET_KEY", "mini-inventory")
 
 # Initialize Flask-Login
 login_manager = LoginManager(app)
@@ -22,19 +24,25 @@ login_manager.login_message_category = 'warning'
 
 # Load env values
 load_dotenv()
-DB_HOST = os.getenv('DB_HOST')
-DB_USER = os.getenv('DB_USER')
-DB_PASSWD = os.getenv('DB_PASSWD')
+
+# Read DB config from environment (docker-compose will provide these)
+DB_HOST = os.getenv('DB_HOST', '127.0.0.1')
+DB_USER = os.getenv('DB_USER', 'root')
+DB_PASSWD = os.getenv('DB_PASSWD', '')
+DB_NAME = os.getenv('DB_NAME', 'mini')
+DB_PORT = int(os.getenv('DB_PORT', 3306))
 
 # DB connection
 dbconfig = {
-    "host": DB_HOST, 
+    "host": DB_HOST,
     "user": DB_USER,
-    "password":DB_PASSWD, 
-    "database":"mini",
-    "port": 24967,
-    "ssl_disabled": True,
+    "password": DB_PASSWD,
+    "database": DB_NAME,
+    "port": DB_PORT,
+    # "ssl_disabled": True,
 }
+
+db_init.init_db(dbconfig, database_name=DB_NAME)
 
 connection_pool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="mypool",
@@ -355,4 +363,8 @@ def sql_execute(command, fields=()):
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", debug=True)
+    # Bind to 0.0.0.0 so the container can serve traffic from outside
+    listen_host = os.getenv('HOST', '0.0.0.0')
+    listen_port = int(os.getenv('PORT', 5000))
+    debug_flag = os.getenv('FLASK_DEBUG', 'False').lower() in ("1", "true", "yes")
+    app.run(host=listen_host, port=listen_port, debug=debug_flag)
